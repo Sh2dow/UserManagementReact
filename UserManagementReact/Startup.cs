@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,11 +10,7 @@ using Microsoft.Extensions.Hosting;
 using UserManagementReact.Services;
 using UserManagementReact.Entities;
 using System;
-using System.ComponentModel.Design;
 using UserManagementReact.Helpers;
-using IdentityServer4.Services;
-using AutoMapper;
-using IdentityModel;
 using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 using UserManagementReact.Shared;
@@ -25,7 +19,7 @@ using System.Collections.Generic;
 
 namespace UserManagementReact
 {
-	public class Startup
+    public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
@@ -44,9 +38,9 @@ namespace UserManagementReact
 			services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
-			services.AddIdentityServer()
-				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
-				.AddProfileService<ProfileService>();
+			//services.AddIdentityServer()
+			//	.AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+			//	.AddProfileService<ProfileService>();
 
 			services.Configure<IdentityOptions>(options =>
 			{
@@ -170,10 +164,10 @@ namespace UserManagementReact
 				//	context.Response.StatusCode = 300;
 				//	await context.Response.CompleteAsync();
 				//});
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller}/{action=Index}/{id?}");
-				endpoints.MapRazorPages();
+				//endpoints.MapControllerRoute(
+				//	name: "default",
+				//	pattern: "{controller}/{action=Index}/{id?}");
+				//endpoints.MapRazorPages();
 			});
 
 			app.UseSpa(spa =>

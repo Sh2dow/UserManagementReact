@@ -1,6 +1,5 @@
 ﻿using UserManagementReact.Entities;
 using UserManagementReact.Services;
-using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,19 +28,19 @@ namespace UserManagementReact.ServicesTests.Helpers
 				.UseInMemoryDatabase("InMemoryDb")
 				.UseInternalServiceProvider(serviceProvider);
 
-			var operationalStoreOptions = new IdentityServer4.EntityFramework.Options.OperationalStoreOptions()
-			{
-				ConfigureDbContext = optionsx =>
-				{
-					optionsx.UseInMemoryDatabase("InMemoryDb");
-					optionsx.UseInternalServiceProvider(serviceProvider);
-				}
-			};
+			//var operationalStoreOptions = new OperationalStoreOptions()
+			//{
+			//	ConfigureDbContext = optionsx =>
+			//	{
+			//		optionsx.UseInMemoryDatabase("InMemoryDb");
+			//		optionsx.UseInternalServiceProvider(serviceProvider);
+			//	}
+			//};
 
 			var dbContextOptions = builder.Options;
-			var identityServerOptions = Options.Create<OperationalStoreOptions>(operationalStoreOptions);
+			//var identityServerOptions = Options.Create<OperationalStoreOptions>(operationalStoreOptions);
 
-			return new ApplicationDbContext(dbContextOptions, identityServerOptions);
+			return new ApplicationDbContext(dbContextOptions);
 		}
 		public static UserManager<ApplicationUser> CreateUserManager(ApplicationDbContext context)
 		{

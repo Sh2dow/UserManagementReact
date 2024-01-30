@@ -1,45 +1,35 @@
-﻿using UserManagementReact.Services;
-using IdentityModel;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using UserManagementReact.Entities;
 
 namespace UserManagementReact.Helpers
 {
-	public class ProfileService : IProfileService
+    public class ProfileService
     {
-        private readonly IUserManagementService _umService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-		public ProfileService(IUserManagementService umService)
-		{
-			_umService = umService;
-		}
+        public ProfileService(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
-		public async Task GetProfileDataAsync(ProfileDataRequestContext context)
-		{
-			if (context == null)
-				return;
+        public async Task<ClaimsPrincipal> GetClaimsPrincipalAsync(ApplicationUser user)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                // Add additional claims as needed
+            };
 
-			var claims = context.Subject.Claims
-				.Where(claim => claim.Type == JwtClaimTypes.Email || claim.Type == JwtClaimTypes.Role).ToList();
+            var claimsIdentity = new ClaimsIdentity(claims, "custom", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            return new ClaimsPrincipal(claimsIdentity);
+        }
 
-			//foreach (var claim in claims)
-			//{
-			//	if (claim.Type == "role")
-			//		context.IssuedClaims.Add(new Claim(ClaimTypes.Role, claim.Value));
-			//}
-
-			context.IssuedClaims.AddRange(claims);
-		}
-
-		public async Task IsActiveAsync(IsActiveContext context)
-		{
-			var user = await _umService.GetUserAsync(context.Subject);
-			context.IsActive = (user != null);
-		}
-	}
+        public async Task<bool> IsUserActiveAsync(ApplicationUser user)
+        {
+            return user != null && await _userManager.IsInRoleAsync(user, "ActiveRole");
+        }
+    }
 }
